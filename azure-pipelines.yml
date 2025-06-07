@@ -1,0 +1,37 @@
+trigger:
+  branches:
+    include:
+      - main
+
+stages:
+  - stage: Dev
+    displayName: "Development"
+    jobs:
+      - job: DevBuild
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '18.x'
+          - script: npm install
+            displayName: 'Install'
+          - script: npm test
+            displayName: 'Run Unit Tests'
+          - script: echo "Dev stage done"
+
+  - stage: QA
+    displayName: "QA"
+    dependsOn: Dev
+    jobs:
+      - job: QATests
+        steps:
+          - script: echo "Deploy to QA"
+          - script: echo "Run Integration Tests"
+
+  - stage: UAT
+    displayName: "UAT"
+    dependsOn: QA
+    jobs:
+      - job: UATDeploy
+        steps:
+          - script: echo "Deploy to UAT"
+          - script: echo "Notify Business"
