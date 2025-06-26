@@ -24,9 +24,11 @@ jobs:
 
       - name: Archive Production Artifacts
         run: |
-          mkdir -p build
-          cp -r * build
-        if: success()
+            mkdir -p build
+            shopt -s extglob
+            cp -r !(build) build
+        shell: bash
+
 
       - name: Upload Artifact to GitHub
         uses: actions/upload-artifact@v4
